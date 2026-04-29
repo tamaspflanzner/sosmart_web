@@ -23,4 +23,4 @@ Recommended setup in GCP:
 5. Create one trigger for `main` using `.cloudbuild/production.yaml`.
 
 These build files expect the application code and `Dockerfile` at repository root.
-The runtime container should render its Nginx config from `BACKEND_ORIGIN` so `/api` is proxied to the backend service.
+The runtime container renders `nginx/default.conf.template` from `BACKEND_ORIGIN` so `/api` is proxied to the backend service.

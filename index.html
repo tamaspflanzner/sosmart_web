@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SoSmart Web</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap");
+
+      :root {
+        --bg-top: #f7f3e7;
+        --bg-bottom: #dcecfb;
+        --panel: rgba(255, 255, 255, 0.88);
+        --line: #d8e1eb;
+        --text: #102135;
+        --muted: #536476;
+        --accent: #0b7a75;
+        --accent-soft: #e8fbf9;
+        --warn: #9f1239;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Sora", "Segoe UI", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(900px 420px at -10% -10%, #fff6cf 0%, transparent 55%),
+          radial-gradient(860px 420px at 110% 0%, #d8f7ee 0%, transparent 52%),
+          linear-gradient(165deg, var(--bg-top), var(--bg-bottom));
+      }
+
+      .shell {
+        width: min(1180px, 94vw);
+        margin: 24px auto 40px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .brand-badge {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        border: 1px solid #b8d8d4;
+        background: var(--accent-soft);
+        color: #0d5e59;
+        font-size: 0.82rem;
+        font-weight: 700;
+        padding: 6px 10px;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(1.4rem, 2.6vw, 2.1rem);
+      }
+
+      .topbar a {
+        text-decoration: none;
+        color: var(--accent);
+        font-weight: 700;
+        border: 1px solid var(--line);
+        background: #fff;
+        border-radius: 999px;
+        padding: 8px 12px;
+      }
+
+      .lead {
+        margin: 0 0 18px;
+        color: var(--muted);
+        max-width: 760px;
+      }
+
+      .grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .grid.two {
+        grid-template-columns: 1.2fr 1fr;
+      }
+
+      .grid.three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--panel);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 14px 34px rgba(16, 33, 53, 0.08);
+        padding: 16px;
+      }
+
+      .panel h2,
+      .panel h3 {
+        margin: 0 0 10px;
+      }
+
+      .kpi {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 12px;
+      }
+
+      .kpi-label {
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .kpi-value {
+        margin-top: 6px;
+        font-size: 1.35rem;
+        font-weight: 700;
+      }
+
+      .row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+      }
+
+      input,
+      select,
+      button {
+        font: inherit;
+        border-radius: 11px;
+        border: 1px solid #ccd6e1;
+        padding: 9px 10px;
+      }
+
+      input,
+      select {
+        flex: 1 1 180px;
+      }
+
+      button {
+        cursor: pointer;
+        font-weight: 700;
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+
+      button.secondary {
+        background: #fff;
+        color: var(--accent);
+      }
+
+      .status {
+        min-height: 20px;
+        color: var(--muted);
+        font-size: 0.93rem;
+      }
+
+      .status.error {
+        color: var(--warn);
+      }
+
+      .json {
+        background: #0b1020;
+        color: #d9f8ed;
+        border-radius: 14px;
+        padding: 12px;
+        min-height: 220px;
+        overflow: auto;
+        font-size: 0.84rem;
+      }
+
+      .tip {
+        margin: 0 0 10px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 900px) {
+        .grid.two,
+        .grid.three {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <span class="brand-badge">SoSmart Web</span>
+          <h1>Shared entry point for the SoSmart ecosystem</h1>
+        </div>
+        <a href="/simple.html">Open Simple View</a>
+      </div>
+
+      <p class="lead">
+        This web surface brings together shared statistics and application entry points. All browser requests stay
+        on the same origin and `/api` is proxied by the web service to the matching backend API service.
+      </p>
+
+      <section class="grid three" style="margin-bottom: 14px">
+        <div class="kpi">
+          <div class="kpi-label">Public Daily Statistics</div>
+          <div class="kpi-value" id="publicDaysKpi">-</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Saved CO2</div>
+          <div class="kpi-value" id="publicCo2Kpi">-</div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">My Total Trips</div>
+          <div class="kpi-value" id="myTripsKpi">-</div>
+        </div>
+      </section>
+
+      <section class="grid two">
+        <div class="panel">
+          <h2>Public Statistics</h2>
+          <div class="row">
+            <input id="publicFrom" type="date" />
+            <input id="publicTo" type="date" />
+            <button id="publicDailyBtn">Load Public Daily Stats</button>
+            <button id="globalStatsBtn" class="secondary">Load Global Totals</button>
+          </div>
+          <pre id="publicResult" class="json">{}</pre>
+        </div>
+
+        <div class="panel">
+          <h2>Access</h2>
+          <p class="tip">Demo credentials can be used while the demo seed is enabled in the backend environment.</p>
+          <div class="row">
+            <input id="registerName" placeholder="Full name" />
+            <input id="registerEmail" type="email" placeholder="Email" />
+          </div>
+          <div class="row">
+            <input id="registerPassword" type="password" placeholder="Password (min 8)" />
+            <button id="registerBtn">Register</button>
+          </div>
+          <div class="row">
+            <input id="loginEmail" type="email" placeholder="Email" />
+            <input id="loginPassword" type="password" placeholder="Password" />
+          </div>
+          <div class="row">
+            <button id="loginBtn">Login</button>
+            <button id="meBtn" class="secondary">Get Profile</button>
+            <button id="logoutBtn" class="secondary">Logout</button>
+          </div>
+          <div id="authStatus" class="status"></div>
+        </div>
+      </section>
+
+      <section class="grid two" style="margin-top: 14px">
+        <div class="panel">
+          <h2>Submit Trip</h2>
+          <div class="row">
+            <input id="origin" placeholder="Origin" />
+            <input id="destination" placeholder="Destination" />
+          </div>
+          <div class="row">
+            <select id="transportMode">
+              <option value="walking">walking</option>
+              <option value="bicycle">bicycle</option>
+              <option value="bus">bus</option>
+              <option value="car">car</option>
+              <option value="tram">tram</option>
+              <option value="train">train</option>
+              <option value="scooter">scooter</option>
+              <option value="other">other</option>
+            </select>
+            <input id="distanceKm" type="number" step="0.1" min="0.1" placeholder="Distance (km)" />
+            <input id="co2SavedKg" type="number" step="0.01" min="0" placeholder="CO2 saved (kg)" />
+          </div>
+          <div class="row">
+            <input id="tripTime" type="datetime-local" />
+            <button id="submitTripBtn">Submit Trip</button>
+          </div>
+          <div id="tripStatus" class="status"></div>
+        </div>
+
+        <div class="panel">
+          <h2>My Statistics</h2>
+          <div class="row">
+            <input id="myFrom" type="date" />
+            <input id="myTo" type="date" />
+            <button id="myStatsBtn">Load My Stats</button>
+          </div>
+          <pre id="myResult" class="json">{}</pre>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const API_BASE = "/api/v1";
+      let accessToken = localStorage.getItem("accessToken") || "";
+
+      function setStatus(id, text, isError = false) {
+        const el = document.getElementById(id);
+        el.textContent = text;
+        el.className = isError ? "status error" : "status";
+      }
+
+      function renderJson(id, value) {
+        document.getElementById(id).textContent = JSON.stringify(value, null, 2);
+      }
+
+      function getAuthHeaders() {
+        const headers = { "Content-Type": "application/json" };
+        if (accessToken) {
+          headers.Authorization = `Bearer ${accessToken}`;
+        }
+        return headers;
+      }
+
+      async function apiRequest(path, options = {}) {
+        const response = await fetch(`${API_BASE}${path}`, options);
+        const contentType = response.headers.get("content-type") || "";
+        const payload = contentType.includes("application/json") ? await response.json() : await response.text();
+        if (!response.ok) {
+          throw new Error(typeof payload === "string" ? payload : payload.detail || "Request failed");
+        }
+        return payload;
+      }
+
+      function toQuery(fromInputId, toInputId) {
+        const params = new URLSearchParams();
+        const from = document.getElementById(fromInputId).value;
+        const to = document.getElementById(toInputId).value;
+        if (from) params.set("from", from);
+        if (to) params.set("to", to);
+        const query = params.toString();
+        return query ? `?${query}` : "";
+      }
+
+      function updatePublicKpis(data) {
+        const days = data.days || [];
+        const totalCo2 = days.reduce((sum, item) => sum + (item.total_co2_saved_kg || 0), 0);
+        document.getElementById("publicDaysKpi").textContent = `${days.length}`;
+        document.getElementById("publicCo2Kpi").textContent = `${totalCo2.toFixed(2)} kg`;
+      }
+
+      function updateMyKpis(data) {
+        document.getElementById("myTripsKpi").textContent = `${data.total_trip_count ?? "-"}`;
+      }
+
+      async function loadPublicDailyStats() {
+        try {
+          const data = await apiRequest(`/stats/public/daily${toQuery("publicFrom", "publicTo")}`);
+          renderJson("publicResult", data);
+          updatePublicKpis(data);
+        } catch (error) {
+          renderJson("publicResult", { error: error.message });
+        }
+      }
+
+      async function loadGlobalStats() {
+        try {
+          const data = await apiRequest(`/stats/global${toQuery("publicFrom", "publicTo")}`);
+          renderJson("publicResult", data);
+        } catch (error) {
+          renderJson("publicResult", { error: error.message });
+        }
+      }
+
+      async function register() {
+        try {
+          const data = await apiRequest("/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              full_name: document.getElementById("registerName").value,
+              email: document.getElementById("registerEmail").value,
+              password: document.getElementById("registerPassword").value,
+            }),
+          });
+          setStatus("authStatus", `Registered ${data.email}`);
+        } catch (error) {
+          setStatus("authStatus", error.message, true);
+        }
+      }
+
+      async function login() {
+        try {
+          const data = await apiRequest("/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: document.getElementById("loginEmail").value,
+              password: document.getElementById("loginPassword").value,
+            }),
+          });
+          accessToken = data.access_token;
+          localStorage.setItem("accessToken", accessToken);
+          setStatus("authStatus", "Logged in.");
+        } catch (error) {
+          setStatus("authStatus", error.message, true);
+        }
+      }
+
+      async function loadProfile() {
+        try {
+          const data = await apiRequest("/users/me", {
+            headers: getAuthHeaders(),
+          });
+          setStatus("authStatus", `Logged in as ${data.full_name} (${data.email})`);
+        } catch (error) {
+          setStatus("authStatus", error.message, true);
+        }
+      }
+
+      function logout() {
+        accessToken = "";
+        localStorage.removeItem("accessToken");
+        setStatus("authStatus", "Logged out.");
+      }
+
+      async function submitTrip() {
+        try {
+          await apiRequest("/trips", {
+            method: "POST",
+            headers: getAuthHeaders(),
+            body: JSON.stringify({
+              origin: document.getElementById("origin").value,
+              destination: document.getElementById("destination").value,
+              transport_mode: document.getElementById("transportMode").value,
+              distance_km: Number(document.getElementById("distanceKm").value),
+              co2_saved_kg: Number(document.getElementById("co2SavedKg").value),
+              trip_time: document.getElementById("tripTime").value
+                ? new Date(document.getElementById("tripTime").value).toISOString()
+                : null,
+            }),
+          });
+          setStatus("tripStatus", "Trip submitted.");
+        } catch (error) {
+          setStatus("tripStatus", error.message, true);
+        }
+      }
+
+      async function loadMyStats() {
+        try {
+          const data = await apiRequest(`/stats/me${toQuery("myFrom", "myTo")}`, {
+            headers: getAuthHeaders(),
+          });
+          renderJson("myResult", data);
+          updateMyKpis(data);
+        } catch (error) {
+          renderJson("myResult", { error: error.message });
+        }
+      }
+
+      document.getElementById("publicDailyBtn").addEventListener("click", loadPublicDailyStats);
+      document.getElementById("globalStatsBtn").addEventListener("click", loadGlobalStats);
+      document.getElementById("registerBtn").addEventListener("click", register);
+      document.getElementById("loginBtn").addEventListener("click", login);
+      document.getElementById("meBtn").addEventListener("click", loadProfile);
+      document.getElementById("logoutBtn").addEventListener("click", logout);
+      document.getElementById("submitTripBtn").addEventListener("click", submitTrip);
+      document.getElementById("myStatsBtn").addEventListener("click", loadMyStats);
+
+      loadPublicDailyStats();
+    </script>
+  </body>
+</html>
