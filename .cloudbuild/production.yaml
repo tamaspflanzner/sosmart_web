@@ -22,7 +22,7 @@ steps:
           --region=${_REGION} \
           --platform=managed \
           --allow-unauthenticated \
-          --set-env-vars=BACKEND_ORIGIN="${BACKEND_URL}"
+          --set-env-vars=BACKEND_ORIGIN="$$BACKEND_URL"
 
 images:
   - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_REPOSITORY}/${_IMAGE_NAME}:$SHORT_SHA
